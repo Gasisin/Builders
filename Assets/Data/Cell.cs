@@ -24,6 +24,10 @@ namespace Assets.Data {
             get { return _y; }
         }
 
+        public override bool Equals(System.Object obj){
+            return ((Cell) obj).X == X && ((Cell) obj).Y == Y;
+        }
+
         private int _y;
 
         public bool IsFree(){
@@ -40,14 +44,17 @@ namespace Assets.Data {
             result.Add(new Pair(_x+1, _y));
             result.Add(new Pair(_x+1, _y-1));
             result.Add(new Pair(_x, _y-1));
+            return result;
         }
 
 //        public void AddBuilder(Builder builder){
 //            _builder = builder;
 //        }
-        public void BuildNextBuilding(){
+        public bool BuildNextBuilding(){
+            if ((int)_building>3) return false;
             int typeInt = (int) _building + 1;
             _building = (BuildingType)typeInt;
+            return true;
         }
     }
 }

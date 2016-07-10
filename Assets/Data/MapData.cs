@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Scripts;
 
 namespace Assets.Data {
     public class MapData{
@@ -9,13 +10,16 @@ namespace Assets.Data {
         public Dictionary<string, Builder> Builders;
         private List<string> _players;// = new List<string>(); 
         private string _currentPlayer;
-        private Dictionary<string, Cell> _buildersPositions; 
+        private Dictionary<string, Cell> _buildersPositions;
+
+        private MetaController _metaController;
 
         public void CreateNewMap(){
             MapCells = new List<Cell>();
             for (int i = 1; i < 6; i++){
                 for (int b = 1; b < 6; b++){
                     MapCells.Add(new Cell(i, b));
+                    _metaController.CreateCellView(MapCells.Last());
                 }
             }
             _players = new List<string>();
@@ -30,6 +34,48 @@ namespace Assets.Data {
             foreach (var builder in Builders){
                 AddBuilder(builder.Value);
             }
+        }
+
+        public void SetMetaController(MetaController controller){
+            _metaController = controller;
+        }
+
+        public void ClickOnCell(Cell cell){
+            if (IsBuilderOnCell(cell)){
+                Builder builder = Builders[_buildersPositions.First(x => x.Value.X == cell.X && x.Value.Y == cell.Y).Key];
+                if (builder.PlayerId.Equals(_currentPlayer)){
+                    SelectBuilder(builder);
+                }
+            }
+            var selectedBuilder = GetSelectedBuilder();
+            if (selectedBuilder == null) return;
+            if (!selectedBuilder.IsMoveThisRound && IsCellAreNeighbor(_buildersPositions[selectedBuilder.UniqId], cell)){
+                MoveBuilderTo(selectedBuilder, cell);
+            }
+            if (selectedBuilder.IsMoveThisRound && IsCellAreNeighbor(_buildersPositions[selectedBuilder.UniqId], cell)) {
+                Build(selectedBuilder, cell);
+            }
+        }
+
+        private void SelectBuilder(Builder builder){
+            foreach (var build in Builders) {
+                build.Value.IsSelected = false;
+            }
+            builder.IsSelected = true;
+            _metaController.SelectBuilder(builder);
+        }
+
+        private Builder GetSelectedBuilder(){
+            foreach (var builder in Builders){
+                if (builder.Value.IsSelected){
+                    return builder.Value;
+                }
+            }
+            return null;
+        }
+
+        private bool IsBuilderOnCell(Cell cell){
+            return _buildersPositions.Any(x => x.Value.X == cell.X && x.Value.Y == cell.Y);
         }
 
         public void StartNewRound(){

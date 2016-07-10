@@ -9,6 +9,13 @@ namespace Assets.Data {
         private string _uniqId;
 
         private bool _isMoveThisRound;
+        private bool _isSelected;
+
+        public bool IsSelected{
+            get { return _isSelected; }
+            set { _isSelected = value; }
+        }
+
         private bool _isBuildThisRound;
 
         public bool IsBuildThisRound{
