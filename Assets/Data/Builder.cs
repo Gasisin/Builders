@@ -28,6 +28,12 @@ namespace Assets.Data {
             set { _isMoveThisRound = value; }
         }
 
+        public void StartNewRound(){
+            IsBuildThisRound = false;
+            IsMoveThisRound = false;
+            IsSelected = false;
+        }
+
         public string PlayerId{
             get { return _playerId; }
         }

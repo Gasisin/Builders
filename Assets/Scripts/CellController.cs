@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Assets.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,14 @@ namespace Assets.Scripts {
 
         public void BuilderHere(GameObject builder) {
             builder.transform.SetParent(transform);
+        }
+
+        public void Init(){
+            Text.text = "";
+        }
+
+        public void BuildOnCell(Cell cell){
+            Text.text = ((int) cell.GetBuildingType()).ToString();
         }
     }
 }

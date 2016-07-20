@@ -24,6 +24,14 @@ namespace Assets.Data {
             get { return _y; }
         }
 
+        public int GetBuildingLevel(){
+            return (int) _building;
+        }
+
+        public BuildingType GetBuildingType() {
+            return _building;
+        }
+
         public override bool Equals(System.Object obj){
             return ((Cell) obj).X == X && ((Cell) obj).Y == Y;
         }
@@ -34,6 +42,9 @@ namespace Assets.Data {
             return _building == BuildingType.Empty;// && _builder == null;
         }
 
+        public bool IsCellIsNaignborLevel(Cell cell){
+            return (GetBuildingLevel() + 1) >= cell.GetBuildingLevel();
+        }
         public List<Pair> GetNeighborsCells(){
             List<Pair> result = new List<Pair>();
             result.Add(new Pair(_x-1, _y-1));
@@ -55,6 +66,10 @@ namespace Assets.Data {
             int typeInt = (int) _building + 1;
             _building = (BuildingType)typeInt;
             return true;
+        }
+
+        public bool IsClosed(){
+            return _building == BuildingType.Closed;
         }
     }
 }
